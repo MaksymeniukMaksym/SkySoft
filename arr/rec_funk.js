@@ -25,38 +25,30 @@
 // 3. Всі елементи з значенням - 0 заміни на два елементи які в сумі дають 10 (8 і 2). ( [1,0,2] => [1,3,7,2])
 // 4. Перетвори масив в стрічку в якій елементи розділені через "-". ( [1,2,3,]  => "1-2-3")
 
-    //1
-    function flatDeep(arr) {
-        return arr.reduce((flattenArray, element) => {
-          return Array.isArray(element) ? [...flattenArray, ...flatDeep(element)] : [...flattenArray, element]
-        }, [])
+    //1 
+    function flatDeep(arr, i = 0) {
+      
+      if(i == arr.length)  return arr;
+
+        if(Array.isArray(arr[i])){
+           arr.splice(i,1, ...arr[i])
+           i--;
+        }
+        return flatDeep(arr, ++i);     
        }
        arr = flatDeep(arr);
 
-    var style = function(i){
-      if (i >= arr.length) return;
-      if (arr[i].length < 2) return style(i + 1);
-        else {
-           
-            
-
-            
-            //2
-            arr[i] = arr[i] % 10;
-            
-             
-            if (arr[i] === 0) {
-                //3
-                arr.splice(i, 1, 5 ,5);
-                return style(i + 1); 
-            } else {
-                //2
-                arr[i] = arr[i] % 10;
-                return style(i + 1);
-            }
-        }
-    }
-    style(0);
+       //2
+       arr = arr.map(function(num) {
+        return num % 10;
+       });
+       
+       //3
+       for(let i = 0; i < arr.length; i++){
+         if(arr[i] === 0){
+          arr.splice(i, 1, 5 ,5);
+         }
+       }
     //4
     arr = arr.join('-');
     console.log(arr);
