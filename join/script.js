@@ -1,28 +1,19 @@
-var arr = [1,2,3,[4,5,6]];
 
-Array.prototype.join = function(str)  {
-            
-            let tmp = [""];
-
-            for(let i = 0; i < this.length; i++){
-
-                if(this[i][0] == undefined){
-
-                    if(i != 0){
-
-                        tmp[0] += str + this[i];
-                    }else tmp[0] += this[i];
-
-                }else for(let j = 0; this[i][j] != undefined ;j++){
-
-                    tmp[0] += str + this[i][j] ;
-                }
-    
-               
-            }
-            
-            return tmp;                 
+var arr = [1,[[[2]]],2,[],3,'abc',[4,[7, [34]],5,[],6]];
+Array.prototype.join = function(str) {
+                    let result = "";
+                    function innerFunction(innerArr) {
+                        for (let element of innerArr) {
+                            if (!Array.isArray(element)) {
+                                result += element + str;
+                            } else {
+                                innerFunction(element);
+                            }
+                        }
+                        
+                        return result.slice(0,-1);
+                    }
+                    return innerFunction(arr) ;
                 };
-
 
 console.log(arr.join('-')); 
