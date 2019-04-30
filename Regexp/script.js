@@ -8,9 +8,6 @@ const check_url = (() => {
             tmp = null;
 
             let regexp = /(?:([^\:]*)\:\/\/)?(?:([^\:\@]*)(?:\:([^\@]*))?\@)?(?:([^\/\:]*)\.(?=[^\.\/\:]*\.[^\.\/\:]*))?([^\.\/\:]*)(?:\.([^\/\.\:]*))?(?:\:([0-9]*))?(\/[^\?#]*(?=.*?\/)\/)?([^\?#]*)?(?:\?([^#]*))?(?:#(.*))?/;
-    
-                text = '',
-                tmp = null;
                 tmp = url.match(regexp);
     
                 let name = {      
@@ -23,29 +20,35 @@ const check_url = (() => {
                     Query: tmp[10],
                 }            
             
-                Object.keys(name).forEach(key => { text += (key + ":"+name[key] + "<br/>") });
+                Object.keys(name).forEach(key => {
+                     
+                          text += name[key] !== undefined ? (` ${key} : ${name[key]} <br/>`) : '' ;
+                     
+                        });
         elem.innerHTML = name.Protocol !== undefined ? text : 'Please enter the valid url';
     }
 })();
+//Windows: C:\games\The Witcher 3\Wild Hunt.exe
+//Linux: /home/user/docs/Letter.txt
+// ToDo
+// const check_folder = (() => {
+//     const input = document.getElementById("file");
+//     return () => {
+//             file_way = input.value,
+//             text = '',
+//             tmp = null;
 
-const check_folder = (() => {
-    const input = document.getElementById("file");
-    return () => {
-            file_way = input.value,
-            text = '',
-            tmp = null;
-
-            let regexp = / /;
+//             let regexp = / /;
     
-                text = '',
-                tmp = null;
-                tmp = file_way.match(regexp);
+//                 text = '',
+//                 tmp = null;
+//                 tmp = file_way.match(regexp);
     
-                let name = {      
+//                 let name = {      
             
-                }            
+//                 }            
             
-                Object.keys(name).forEach(key => { text += (key + ":"+name[key] + "<br/>") });
-        folder.innerHTML = name.Foo !== undefined ? text : 'Please enter the valid url';
-    }
-})();
+//                 Object.keys(name).forEach(key => { text += (key + ":"+name[key] + "<br/>") });
+//         folder.innerHTML = name.Foo !== undefined ? text : 'Please enter the valid url';
+//     }
+// })();
