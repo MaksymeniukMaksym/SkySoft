@@ -3,12 +3,10 @@
 const check_url = (() => {
     const input = document.getElementById("link");
     return () => {
-            url = input.value,
-            text = '',
-            tmp = null;
+            text = '';
 
             let regexp = /(?:([^\:]*)\:\/\/)?(?:([^\:\@]*)(?:\:([^\@]*))?\@)?(?:([^\/\:]*)\.(?=[^\.\/\:]*\.[^\.\/\:]*))?([^\.\/\:]*)(?:\.([^\/\.\:]*))?(?:\:([0-9]*))?(\/[^\?#]*(?=.*?\/)\/)?([^\?#]*)?(?:\?([^#]*))?(?:#(.*))?/;
-                tmp = url.match(regexp);
+                tmp = input.value.match(regexp);
     
                 let name = {      
                     URL: tmp[0],
@@ -22,33 +20,29 @@ const check_url = (() => {
             
                 Object.keys(name).forEach(key => {
                      
-                          text += name[key] !== undefined ? (` ${key} : ${name[key]} <br/>`) : '' ;
+                          text += (name[key] !== undefined) ? (` ${key} : ${name[key]} <br/>`) : '' ;
                      
                         });
-        elem.innerHTML = name.Protocol !== undefined ? text : 'Please enter the valid url';
+        elem.innerHTML = ((name.Protocol !== undefined)&&(name.Host !== '') )? text : 'Please enter the valid url';
     }
 })();
-//Windows: C:\games\The Witcher 3\Wild Hunt.exe
+//Windows: C:\games\TheWitcher3\WildHunt.exe
 //Linux: /home/user/docs/Letter.txt
-// ToDo
-// const check_folder = (() => {
-//     const input = document.getElementById("file");
-//     return () => {
-//             file_way = input.value,
-//             text = '',
-//             tmp = null;
-
-//             let regexp = / /;
-    
-//                 text = '',
-//                 tmp = null;
-//                 tmp = file_way.match(regexp);
-    
-//                 let name = {      
-            
-//                 }            
-            
-//                 Object.keys(name).forEach(key => { text += (key + ":"+name[key] + "<br/>") });
-//         folder.innerHTML = name.Foo !== undefined ? text : 'Please enter the valid url';
-//     }
-// })();
+const check_folder = (() => {
+    const input = document.getElementById("file");
+    return () => {
+            const regexp = /(^.+):(\\.*)*\.(.*)$/;
+            let result = input.value.match(regexp); 
+	
+          
+                let disk = result.split(':')[0]; 
+                let path = result.split(':')[1].split('.')[0];
+                let type = result.split(':')[1].split('.')[1];
+                
+                folder.innerHTML = `         
+                Disk: ${disk} <br/>
+                Path: ${path} <br/>
+                Type: ${type}`
+                
+    }
+})();
