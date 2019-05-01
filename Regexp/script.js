@@ -6,16 +6,16 @@ const check_url = (() => {
             text = '';
 
             let regexp = /(?:([^\:]*)\:\/\/)?(?:([^\:\@]*)(?:\:([^\@]*))?\@)?(?:([^\/\:]*)\.(?=[^\.\/\:]*\.[^\.\/\:]*))?([^\.\/\:]*)(?:\.([^\/\.\:]*))?(?:\:([0-9]*))?(\/[^\?#]*(?=.*?\/)\/)?([^\?#]*)?(?:\?([^#]*))?(?:#(.*))?/;
-                tmp = input.value.match(regexp);
+                data = input.value.match(regexp);
     
                 let name = {      
-                    URL: tmp[0],
-                    Protocol: tmp[1],
-                    Login: tmp[2],
-                    Password: tmp[3],
-                    Host: (tmp[4] !== undefined ? (tmp[4]+'.'):'')+(tmp[5] !== undefined ? (tmp[5]):'')+(tmp[6] !== undefined ? ('.'+tmp[6]):''),
-                    Port: tmp[7],    
-                    Query: tmp[10],
+                    URL: data[0],
+                    Protocol: data[1],
+                    Login: data[2],
+                    Password: data[3],
+                    Host: (data[4] !== undefined ? (data[4]+'.'):'')+(data[5] !== undefined ? (data[5]):'')+(data[6] !== undefined ? ('.'+data[6]):''),
+                    Port: data[7],    
+                    Query: data[10],
                 };      
             
                 Object.keys(name).forEach(key => {
@@ -31,18 +31,19 @@ const check_url = (() => {
 const check_folder = (() => {
     const input = document.getElementById("file");
     return () => {
-            const regexp = /^(.+):(\\.*)*\.(.*)$/;
-            let result = input.value.match(regexp)[0]; 
-	
-          
-                let disk = result.split(':')[0]; 
-                let path = result.split(':')[1].split('.')[0];
-                let type = result.split(':')[1].split('.')[1];
+            const regexp = /^(.+):(\\.*)*\.(.*)$/i;
+            let result = input.value.match(regexp); 
+                console.log(result);
+                if(result != null){
+                              
+                let disk = result[0].split(':')[0]; 
+                let path = result[0].split(':')[1].split('.')[0];
+                let type = result[0].split(':')[1].split('.')[1];
                 
                 folder.innerHTML = `         
                 Disk: ${disk} <br/>
                 Path: ${path} <br/>
                 Type: ${type}`
-                
+                } else folder.innerHTML = 'Invalid file path';
     }
 })();
