@@ -16,7 +16,7 @@ const check_url = (() => {
                     Host: (tmp[4] !== undefined ? (tmp[4]+'.'):'')+(tmp[5] !== undefined ? (tmp[5]):'')+(tmp[6] !== undefined ? ('.'+tmp[6]):''),
                     Port: tmp[7],    
                     Query: tmp[10],
-                }            
+                };      
             
                 Object.keys(name).forEach(key => {
                      
@@ -31,8 +31,8 @@ const check_url = (() => {
 const check_folder = (() => {
     const input = document.getElementById("file");
     return () => {
-            const regexp = /(^.+):(\\.*)*\.(.*)$/;
-            let result = input.value.match(regexp); 
+            const regexp = /^(.+):(\\.*)*\.(.*)$/;
+            let result = input.value.match(regexp)[0]; 
 	
           
                 let disk = result.split(':')[0]; 
