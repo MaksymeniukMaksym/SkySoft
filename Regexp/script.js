@@ -26,15 +26,18 @@ const check_url = (() => {
         elem.innerHTML = ((name.Protocol !== undefined)&&(name.Host !== '') )? text : 'Please enter the valid url';
     }
 })();
-//Windows: C:\games\TheWitcher3\WildHunt.exe
+//Windows: c:\folder\myfile.txt
 //Linux: /home/user/docs/Letter.txt
 const check_folder = (() => {
     const input = document.getElementById("file");
     return () => {
-            const regexp = /^(.+):(\\.*)*\.(.*)$/i;
+    //^(?:[a-zA-Z]\:|\\\\[\w\.]+\\[\w.$]+)\\(?:[\w]+\\)*\w([\w.])+$  - Windows
+    //^(\/.*\/)(\w*)(.\w*) -Linux
+            const regexp = /^(?:[a-zA-Z]\:|\\\\[\w\.]+\\[\w.$]+)\\(?:[\w]+\\)*\w([\w.])+$|^(\/.*\/)(\w*)(.\w*)/i;
             let result = input.value.match(regexp); 
                 console.log(result);
                 if(result != null){
+                    if(result[1] !== undefined){
                               
                 let disk = result[0].split(':')[0]; 
                 let path = result[0].split(':')[1].split('.')[0];
@@ -44,6 +47,12 @@ const check_folder = (() => {
                 Disk: ${disk} <br/>
                 Path: ${path} <br/>
                 Type: ${type}`
+                    }else
+                     folder.innerHTML = `         
+                    Path: ${result[2]} <br/>
+                    File: ${result[3]} <br/>
+                    Type: ${result[4]}`;
                 } else folder.innerHTML = 'Invalid file path';
     }
+    
 })();
