@@ -33,25 +33,26 @@ const check_folder = (() => {
     return () => {
     //^(?:[a-zA-Z]\:|\\\\[\w\.]+\\[\w.$]+)\\(?:[\w]+\\)*\w([\w.])+$  - Windows
     //^(\/.*\/)(\w*)(.\w*) -Linux
-            const regexp = /^(?:[a-zA-Z]\:|\\\\[\w\.]+\\[\w.$]+)\\(?:[\w]+\\)*\w([\w.])+$|^(\/.*\/)(\w*)(.\w*)/i;
+            const regexp = /(^(?:)[a-zA-Z])\:(\\(?:[\w]+\\)*)(\w[\w.]+)|^(\/.*\/)(\w*)(.\w*)/i;
             let result = input.value.match(regexp); 
                 console.log(result);
+                
                 if(result != null){
                     if(result[1] !== undefined){
-                              
-                let disk = result[0].split(':')[0]; 
-                let path = result[0].split(':')[1].split('.')[0];
-                let type = result[0].split(':')[1].split('.')[1];
+                               
+                let name = result[3].split('.');
+                let type = result[3].replace(name[0],'').replace(/^\./,'');
                 
                 folder.innerHTML = `         
-                Disk: ${disk} <br/>
-                Path: ${path} <br/>
+                Disk: ${result[1]} <br/>
+                Path: ${result[2]} <br/>
+                Name: ${name[0]} <br/>
                 Type: ${type}`
                     }else
                      folder.innerHTML = `         
-                    Path: ${result[2]} <br/>
-                    File: ${result[3]} <br/>
-                    Type: ${result[4]}`;
+                    Path: ${result[4]} <br/>
+                    File: ${result[5]} <br/>
+                    Type: ${result[6].replace('.','')}`;
                 } else folder.innerHTML = 'Invalid file path';
     }
     
