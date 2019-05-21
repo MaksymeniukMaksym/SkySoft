@@ -1,1 +1,1 @@
-adsfasdas
+alert("/foo/index.js");

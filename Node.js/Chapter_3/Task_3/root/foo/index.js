@@ -1,0 +1,1 @@
+alert("/root/foo/index.js");
