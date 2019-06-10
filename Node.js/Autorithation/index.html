@@ -1,22 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
     <link href="style.css" type="text/css" rel="stylesheet">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Вхід</title>
+    <meta charset="utf-8" />
 </head>
 
 <body>
+    <ul class="menu-main">
+        <li><a href="/register.html">Register</a></li>
+        <li><a href="/login.html" class="current">Login</a></li>
+    </ul>
     <div>
-        <ul class="menu-main">
-            <li><a href="/index.html" class="current">Home</a></li>
-            <li><a href="/register.html">Register</a></li>
-            <li><a href="/login.html">Login</a></li>
-            <li><a href="">Logout</a></li>
-        </ul>
+        <h1>Вхід</h1>
+        <form action="/login" method="post">
+            <label>Логин</label><br>
+            <input type="text" name="name" /><br><br>
+            <label>Пароль</label><br>
+            <input type="text" name="password" /><br><br>
+            <input type="submit" value="Отправить" />
+        </form>
     </div>
 </body>
 
