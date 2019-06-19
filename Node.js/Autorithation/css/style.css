@@ -1,6 +1,6 @@
 body {
   
-  background: url(./image.jpg) 100% /auto;
+  background: url(../image.jpg) 100% /auto;
 }
 
 div {
@@ -9,6 +9,16 @@ div {
   margin: auto;
   padding: 25px 0 5px;
   text-align: center; 
+}
+
+.message {
+  width: 200px;
+  height: 35px;
+  background: red;
+  border: 2px groove black;
+  margin: auto;
+  
+  
 }
 
 .menu-main {
