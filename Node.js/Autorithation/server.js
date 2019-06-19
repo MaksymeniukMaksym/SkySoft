@@ -4,6 +4,9 @@ const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const passport = require('passport');
 const passportJWT = require('passport-jwt');
+const rand = require('csprng');
+const Sequelize = require('sequelize');
+const CryptoJS = require('crypto-js');
 
 let ExtractJwt = passportJWT.ExtractJwt;
 let JwtStrategy = passportJWT.Strategy;
@@ -31,12 +34,11 @@ passport.use(strategy);
 
 app.use(passport.initialize());
 
-
 app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const Sequelize = require('sequelize');
+
 
 
 const sequelize = new Sequelize({
@@ -59,6 +61,9 @@ const User = sequelize.define('user', {
     password: {
         type: Sequelize.STRING,
     },
+    salt: {
+        type: Sequelize.STRING,
+    },
 });
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
@@ -66,8 +71,8 @@ User.sync()
     .then(() => console.log('\"user\" table created '))
     .catch(err => console.log('wrong database'));
 
-const createUser = async ({ name, password }) => {
-    return await User.create({ name, password });
+const createUser = async ({ name, password, salt }) => {
+    return await User.create({ name, password, salt });
 };
 
 const getUser = async obj => {
@@ -82,18 +87,18 @@ let UserOnSession = {
 };
 
 app.get("/register", urlencodedParser, function (req, res) {
-    res.sendFile(__dirname + "/register.html");
+    res.sendFile(__dirname + "/html/register.html");
 });
 
 app.get("/login", urlencodedParser, function (request, response) {
-    response.sendFile(__dirname + "/index.html");
+    response.sendFile(__dirname + "/html/index.html");
 });
 app.get('/home', function (req, res) {
     if (UserOnSession.token != null) {
-        let content = fs.readFileSync(__dirname + '/main.html', 'utf-8');
+        let content = fs.readFileSync(__dirname + '/html/main.html', 'utf-8');
         content = content.replace('%username%', UserOnSession.name);
         res.setHeader('Content-Type', 'text/html');
-        res.send(content);      
+        res.send(content);
     }
     else {
         res.redirect('/login');
@@ -103,8 +108,10 @@ app.get('/home', function (req, res) {
 
 
 app.post('/register', function (req, res, next) {
+    let salt = rand(160, 36);
+    req.body.password = CryptoJS.SHA256(req.body.password + salt).toString();
     const { name, password } = req.body;
-    createUser({ name, password }).then(user =>
+    createUser({ name, password, salt }).then(user =>
         res.redirect('/home'));
 });
 
@@ -112,17 +119,28 @@ app.post('/login', async function (req, res, next) {
     const { name, password } = req.body;
     if (name && password) {
         let user = await getUser({ name: name });
+
         if (!user) {
-            res.status(401).json({ msg: 'No such user found' });
+            console.log("!user");
+
+            //TODO
+
         }
-        if (user.password === password) {
+        console.log(`password: ${password}`);
+        console.log(`user password: ${user.password}`);
+        console.log(`user salt: ${user.salt}`)
+        console.log(`DataPassword: ${(CryptoJS.SHA256(user.password + user.salt).toString())}`);
+        if ((CryptoJS.SHA256(password + user.salt).toString()) === user.password) {
             let payload = { id: user.id };
             UserOnSession.token = jwt.sign(payload, jwtOptions.secretOrKey);
             UserOnSession.name = req.body.name;
             console.log({ msg: 'ok', token: UserOnSession.token });
             res.redirect("/home");
         } else {
-            res.status(401).json({ msg: 'Password is incorrect' });
+
+            console.log("!PASSWORD");
+
+            //TODO
         }
     }
 });
