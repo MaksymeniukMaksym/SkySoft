@@ -120,27 +120,14 @@ app.post('/login', async function (req, res, next) {
     if (name && password) {
         let user = await getUser({ name: name });
 
-        if (!user) {
-            console.log("!user");
-
-            //TODO
-
-        }
-        console.log(`password: ${password}`);
-        console.log(`user password: ${user.password}`);
-        console.log(`user salt: ${user.salt}`)
-        console.log(`DataPassword: ${(CryptoJS.SHA256(user.password + user.salt).toString())}`);
-        if ((CryptoJS.SHA256(password + user.salt).toString()) === user.password) {
-            let payload = { id: user.id };
-            UserOnSession.token = jwt.sign(payload, jwtOptions.secretOrKey);
-            UserOnSession.name = req.body.name;
-            console.log({ msg: 'ok', token: UserOnSession.token });
-            res.redirect("/home");
-        } else {
-
-            console.log("!PASSWORD");
-
-            //TODO
+        if (user) {
+            if ((CryptoJS.SHA256(password + user.salt).toString()) === user.password) {
+                let payload = { id: user.id };
+                UserOnSession.token = jwt.sign(payload, jwtOptions.secretOrKey);
+                UserOnSession.name = req.body.name;
+                console.log({ msg: 'ok', token: UserOnSession.token });
+                res.redirect("/home");
+            }
         }
     }
 });

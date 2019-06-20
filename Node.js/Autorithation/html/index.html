@@ -30,22 +30,15 @@
     <script>
         function run() {
 
-
             var xhr = new XMLHttpRequest();
 
-            xhr.open('GET', 'http://localhost:3000/login', false);
+            xhr.open('GET', 'http://localhost:3000/login', true);
 
-            console.log(xhr.readyState);
-            console.log(xhr.status);
-            xhr.onreadystatechange = function () {
-                let div = log.appendChild(document.createElement('div'));
-                let text = "<div class=\"message\" > Invalid </div>"
-                div.innerHTML = text;
-
-            };
+            setTimeout(() => {
+                log.innerHTML = "<div class=\"message\" > Invalid </div>";
+            }, 200);
 
             xhr.send();
-
         }
     </script>
 </body>
