@@ -14,32 +14,62 @@
     </ul>
     <div>
         <h1>Вхід</h1>
-        <form action="/login" method="post">
+        <form action="/login" method="post" id="form">
             <label>Логин</label><br>
             <input type="text" name="name" required /><br><br>
             <label>Пароль</label><br>
             <input type="password" name="password" required autocomplete="on" /><br><br>
-            <input type="submit" value="Отправить" onclick="run()" />
+            <input type="submit" value="Отправить" />
         </form>
 
     </div>
 
-    <div id="log"></div>
+    <div id="log" class="message"> Invalid</div>
 
 
     <script>
-        function run() {
+        (() => {
 
+        const logelement =  document.querySelector('#log')
+
+        document.querySelector('#form')
+            .addEventListener('submit', e => {
+                e.preventDefault();
+
+                run(e.target);
+            });
+
+        function run(form) {
+            const name = form[0].value,
+                password = form[1].value;
             var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'http://localhost:3000/login', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onreadystatechange = function () {
+                if (xhr.status >= 200 && xhr.status < 301) {
+                    try {
+                        const data = JSON.parse(xhr.responseText);
+                        
+                        if (!data.status) {
+                            logelement.style.display = 'block';
+                            logelement.textContent = "Invalid";
+                        } else {
+                            logelement.style.display = 'none';
+                            if (data.redirect) {
+                                location.href = data.redirect;
+                            }
+                        }
+                    } catch (e) {}
+                }
+            }
+            xhr.send(JSON.stringify({
+                name,
+                password
+            }));
 
-            xhr.open('GET', 'http://localhost:3000/login', true);
-
-            setTimeout(() => {
-                log.innerHTML = "<div class=\"message\" > Invalid </div>";
-            }, 200);
-
-            xhr.send();
         }
+        })();
+
     </script>
 </body>
 

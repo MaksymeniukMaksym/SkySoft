@@ -17,7 +17,7 @@ div {
   background: red;
   border: 2px groove black;
   margin: auto;
-  
+  display: none;
   
 }
 
