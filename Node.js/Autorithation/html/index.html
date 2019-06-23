@@ -30,11 +30,11 @@
     <script>
         (() => {
 
-        const logelement =  document.querySelector('#log')
+        const logelement =  document.querySelector('#log');
 
         document.querySelector('#form')
             .addEventListener('submit', e => {
-                e.preventDefault();
+                e.preventDefault();                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           fault();
 
                 run(e.target);
             });
@@ -60,7 +60,7 @@
                             }
                         }
                     } catch (e) {}
-                } else if (status >= 400) log.textContent = "Please check your internet connection";
+                } else if (xhr.status >= 400) log.textContent = "Please check your internet connection";
             }
             xhr.send(JSON.stringify({
                 name,
