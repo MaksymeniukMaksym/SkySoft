@@ -60,7 +60,7 @@
                             }
                         }
                     } catch (e) {}
-                }
+                } else if (status >= 400) log.textContent = "Please check your internet connection";
             }
             xhr.send(JSON.stringify({
                 name,
