@@ -7,6 +7,7 @@ const passportJWT = require('passport-jwt');
 const rand = require('csprng');
 const Sequelize = require('sequelize');
 const CryptoJS = require('crypto-js');
+const localStorage = require('localStorage');
 
 let ExtractJwt = passportJWT.ExtractJwt;
 let JwtStrategy = passportJWT.Strategy;
@@ -37,9 +38,6 @@ app.use(passport.initialize());
 app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({ extended: true }));
-
-
-
 
 const sequelize = new Sequelize({
     database: 'node_db',
@@ -81,11 +79,6 @@ const getUser = async obj => {
     });
 };
 
-let UserOnSession = {
-    name: null,
-    token: null
-};
-
 app.get("/register", urlencodedParser, function (req, res) {
     res.sendFile(__dirname + "/html/register.html");
 });
@@ -94,9 +87,9 @@ app.get("/login", urlencodedParser, function (request, response) {
     response.sendFile(__dirname + "/html/index.html");
 });
 app.get('/home', function (req, res) {
-    if (UserOnSession.token != null) {
+    if (localStorage.getItem('token') != null) {
         let content = fs.readFileSync(__dirname + '/html/main.html', 'utf-8');
-        content = content.replace('%username%', UserOnSession.name);
+        content = content.replace('%username%', (jwt.verify(localStorage.getItem('token'), jwtOptions.secretOrKey)).name);
         res.setHeader('Content-Type', 'text/html');
         res.send(content);
     }
@@ -115,39 +108,40 @@ app.post('/register', function (req, res, next) {
         res.redirect('/home'));
 });
 
-app.post('/login', async function (req, res, next) {
-    const { name, password } = req.body;
-    if (name && password) {
-        let user = await getUser({ name: name });
-
+app.post('/login', async function(req, res, next) {
+    try {
+      const { name, password } = req.body;
+  
+      if (name && password) {
+        const user = await getUser({ name });
+  
         if (!user) {
-            console.log("!user");
-            res.json({
-                status: false
-            });
+          throw new Error();
         }
-        if ((CryptoJS.SHA256(password + user.salt).toString()) === user.password) {
-            let payload = { id: user.id };
-            UserOnSession.token = jwt.sign(payload, jwtOptions.secretOrKey);
-            UserOnSession.name = req.body.name;
-            console.log({ msg: 'ok', token: UserOnSession.token });
-            res.json({
-                status: true,
-                redirect: '/home'
-            });
+        if (CryptoJS.SHA256(password + user.salt).toString() === user.password) {
+          console.log({ msg: 'ok', token: localStorage.getItem('token') });
+  
+          const token = jwt.sign({ id: user.id }, jwtOptions.secretOrKey, { algorithms: ['SHA256'] });
+  
+          res.json({
+            token,
+            status: true
+          });
         } else {
-
-            console.log("!PASSWORD");
-            res.json({
-                status: false
-            });
+          throw new Error();
         }
+      } else {
+        throw new Error();
+      }
+    } catch (error) {
+      res.json({
+        status: false
+      });
     }
-});
+  });
 
 app.get('/logout', function (req, res) {
-    UserOnSession.token = null;
-    UserOnSession.name = null;
+    localStorage.clear();
     res.redirect("/login")
 });
 
