@@ -36,7 +36,6 @@ passport.use(strategy);
 
 app.use(express.static(__dirname));
 app.set('views', path.join(__dirname, 'views'));
-app.engine('html', require('ejs').renderFile);
 app.use(passport.initialize());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
