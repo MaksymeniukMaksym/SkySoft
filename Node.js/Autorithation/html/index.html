@@ -55,9 +55,12 @@
                                 logelement.textContent = "Invalid";
                             } else {
                                 logelement.style.display = 'none';
-                                if (data.redirect) {
-                                    location.href = data.redirect;
-                                }
+
+                                console.log(data);
+
+                                // if (data.redirect) {
+                                //     location.href = data.redirect;
+                                // }
                             }
                         } catch (e) { }
                     } else if (xhr.status >= 400) log.textContent = "Please check your internet connection";
