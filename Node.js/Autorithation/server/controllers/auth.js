@@ -36,13 +36,19 @@ exports.login = async (req, res) => {
 			if (!user) {
 				throw new Error();
 			}
+			console.log(password);
+			console.log(user.password)
+			console.log(await comparePassword(password, user.password));
 			if (await comparePassword(password, user.password)) {
 				const token = jwt.sign({ id: user.id }, jwtOptions.secretOrKey);
-
+				console.log('done')
+				
 				res.json({
 					token,
-					status: true
+					status: true,
+					redirect: "home"
 				});
+				
 			} else {
 				throw new Error();
 			}
@@ -63,14 +69,13 @@ exports.signup = async (req, res) => {
 		const hash = await hashPassword(password);
 		const user = await createUser({ name, password: hash });
 
-		if (!!user) {
+		if (user) {
 			const token = jwt.sign({ id: user.id }, jwtOptions.secretOrKey );
-
+			
+			res.redirect('/login');
 			res.json({
 				token
-			});
-			res.end();
-			// res.redirect('/home');
+				});
 		} else {
 			throw new Error();
 		}

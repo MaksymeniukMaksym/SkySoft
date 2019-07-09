@@ -1,7 +1,5 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const jwt = require('jsonwebtoken');
-const fs = require('fs');
 const passport = require('passport');
 const passportJWT = require('passport-jwt');
 const path = require('path');
@@ -31,7 +29,7 @@ const strategy = new JwtStrategy(jwtOptions, (jwt_payload, next) => {
 	}
 });
 
-const rootRouter = require('./server/routes/index');
+const rootRouter = require('./server/routes/index.js');
 passport.use(strategy);
 
 app.use(express.static(__dirname));

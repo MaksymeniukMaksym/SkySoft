@@ -25,55 +25,56 @@
 		<div id="log" class="message">Invalid</div>
 
 		<script>
-			(() => {
-				const logelement = document.querySelector('#log');
+		(() => {
+        const logelement = document.querySelector('#log');
 
-				document.querySelector('#form').addEventListener('submit', e => {
-					e.preventDefault();
+        document.querySelector('#form').addEventListener('submit', e => {
+          e.preventDefault();
 
-					run(e.target);
-				});
+          run(e.target);
+        });
 
-				function run(form) {
-					const name = form[0].value,
-						password = form[1].value;
-					var xhr = new XMLHttpRequest();
-					xhr.open('POST', 'http://localhost:3000/login', true);
-					xhr.setRequestHeader('Content-Type', 'application/json');
-					xhr.onreadystatechange = function() {
-						if (xhr.status >= 200 && xhr.status < 301) {
-							try {
-								const data = JSON.parse(xhr.responseText);
+        function run(form) {
+          const name = form[0].value,
+            password = form[1].value;
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', 'http://localhost:3000/login', true);
+          xhr.setRequestHeader('Content-Type', 'application/json');
+          xhr.onreadystatechange = function() {
+            if (xhr.status >= 200 && xhr.status < 301) {
+              try {
+                const data = JSON.parse(xhr.responseText);
 
-								if (!!data) {
-									const token = data.token;
-									localStorage.setItem("token", token);
-								}
+                if (!!data) {
+                  const token = data.token;
+                  localStorage.setItem("token", token);
+                  xhr.open('GET', 'http://localhost:3000/home', true);
+                }
 
-								if (!data.status) {
-									logelement.style.display = 'block';
-									logelement.textContent = 'Invalid';
-								} else {
-									logelement.style.display = 'none';
+                if (!data.status) {
+                  logelement.style.display = 'block';
+                  logelement.textContent = 'Invalid';
+                } else {
+                  logelement.style.display = 'none';
 
-								
+                
 
-									if (data.redirect) {
-									    location.href = data.redirect;
-									}
-								}
-							} catch (e) {}
-						} else if (xhr.status >= 400)
-							log.textContent = 'Please check your internet connection';
-					};
-					xhr.send(
-						JSON.stringify({
-							name,
-							password
-						})
-					);
-				}
-			})();
+                  if (!!localStorage.getItem('token')) {
+                    xhr.open('GET', 'http://localhost:3000/home', true);
+                  }
+                }
+              } catch (e) {}
+            } else if (xhr.status >= 400)
+              log.textContent = 'Please check your internet connection';
+          };
+          xhr.send(
+            JSON.stringify({
+              name,
+              password
+            })
+          );
+        }
+      })();
 		</script>
 	</body>
 </html>
